@@ -22,6 +22,7 @@ class Game(models.Model):
         return self.name
 
 from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Listing(models.Model):
     seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='listings')
@@ -30,6 +31,12 @@ class Listing(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(999)],
+        null=True, 
+        blank=True,
+        help_text="Leave empty for an evergreen/infinite listing. Otherwise, set a quantity between 1 and 999."
+    )
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Order #{{ order.id }} - GamesBazaar{% endblock %}
+
+{% block content %}
+<div class="breadcrumb" style="margin-bottom: 1.5rem; font-size: 0.9rem;">
+    <a href="{% url 'profile' %}" style="color: var(--text-muted); text-decoration: none;">My Profile</a> > 
+    <span style="color: var(--text-main);">Order #{{ order.id }}</span>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="color: var(--text-main); font-size: 2rem; margin-bottom: 0.5rem;">Order Details</h1>
+        
+        <span style="display: inline-block; background-color: {% if order.status == 'completed' %}rgba(31, 163, 99, 0.1){% else %}rgba(217, 119, 6, 0.1){% endif %}; color: {% if order.status == 'completed' %}var(--primary-color){% else %}#d97706{% endif %}; padding: 0.4rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.9rem;">
+            Status: {{ order.get_status_display }}
+        </span>
+    </div>
+
+    {% if messages %}
+    <div style="margin-bottom: 1.5rem;">
+        {% for message in messages %}
+        <div style="background-color: rgba(31, 163, 99, 0.1); border: 1px solid var(--primary-color); color: var(--primary-color); padding: 1rem; border-radius: 6px; text-align: center; font-weight: 500;">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div style="border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; background-color: #fcfcfc;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+            <span style="color: var(--text-muted);">Listing</span>
+            <strong style="color: var(--text-main);">{{ order.listing.title|default:"Deleted Listing" }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+            <span style="color: var(--text-muted);">Seller</span>
+            <strong style="color: var(--text-main);">{{ order.seller.username }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">
+            <span style="color: var(--text-muted);">Order Date</span>
+            <strong style="color: var(--text-main);">{{ order.created_at|date:"F j, Y, g:i a" }}</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-muted); font-size: 1.1rem;">Total Price</span>
+            <strong style="color: var(--primary-color); font-size: 1.5rem;">Rs. {{ order.price }}</strong>
+        </div>
+    </div>
+
+    {% if order.status == 'processing' and request.user == order.buyer %}
+    <div style="background-color: rgba(217, 119, 6, 0.05); border: 1px solid rgba(217, 119, 6, 0.2); padding: 1.5rem; border-radius: 8px; text-align: center;">
+        <h3 style="color: #d97706; margin-bottom: 0.5rem; font-size: 1.2rem;">Awaiting your confirmation</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.5;">
+            The seller has been notified. Please communicate with the seller to receive your item. Once you have successfully received it and verified it works, click the button below to release the funds.
+        </p>
+        
+        <form method="post" action="{% url 'confirm_order' order.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 1rem; background-color: #d97706; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);">
+                I have received the item (Confirm Order)
+            </button>
+        </form>
+    </div>
+    {% elif order.status == 'completed' %}
+    <div style="text-align: center; color: var(--primary-color); font-weight: 600; font-size: 1.1rem; padding: 1.5rem; background-color: rgba(31, 163, 99, 0.05); border-radius: 8px;">
+        ✓ This order has been completed successfully.
+    </div>
+    {% endif %}
+    
+    <div style="margin-top: 1.5rem; text-align: center;">
+        <button class="btn btn-outline" style="width: 100%;">Message Seller (Chat)</button>
+    </div>
+</div>
+{% endblock %}

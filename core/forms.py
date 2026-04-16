@@ -4,7 +4,7 @@ from .models import Listing
 class ListingForm(forms.ModelForm):
     class Meta:
         model = Listing
-        fields = ['game', 'category', 'title', 'price', 'description']
+        fields = ['game', 'category', 'title', 'price', 'quantity', 'description']
 
     def clean(self):
         cleaned_data = super().clean()

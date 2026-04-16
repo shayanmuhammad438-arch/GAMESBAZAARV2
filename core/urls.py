@@ -7,5 +7,6 @@ urlpatterns = [
     path('game/<int:game_id>/', views.game_detail, name='game_detail'),
     path('listing/<int:listing_id>/', views.listing_detail, name='listing_detail'),
     path('listing/<int:listing_id>/buy/', views.buy_listing, name='buy_listing'),
+    path('order/<int:order_id>/', views.order_detail, name='order_detail'),
     path('order/<int:order_id>/confirm/', views.confirm_order, name='confirm_order'),
 ]

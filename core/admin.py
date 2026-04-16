@@ -15,7 +15,7 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(Listing)
 class ListingAdmin(admin.ModelAdmin):
-    list_display = ('title', 'game', 'category', 'seller', 'price', 'is_active')
+    list_display = ('title', 'game', 'category', 'seller', 'price', 'quantity', 'is_active')
     list_filter = ('game', 'category', 'is_active')
     search_fields = ('title', 'description', 'seller__username')
 

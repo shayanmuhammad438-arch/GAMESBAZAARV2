@@ -57,7 +57,7 @@ def buy_listing(request, listing_id):
         request.user.save()
 
         # Create Order (Escrow)
-        Order.objects.create(
+        order = Order.objects.create(
             listing=listing,
             buyer=request.user,
             seller=listing.seller,
@@ -67,14 +67,29 @@ def buy_listing(request, listing_id):
             status='processing'
         )
 
-        # Mark listing as inactive
-        listing.is_active = False
+        # Handle Quantity & Evergreen status
+        if listing.quantity is not None:
+            listing.quantity -= 1
+            if listing.quantity <= 0:
+                listing.is_active = False
+        
+        # Save listing updates
         listing.save()
 
-        messages.success(request, "Purchase successful! The order is now processing.")
-        return redirect('profile')
+        messages.success(request, "Purchase successful! Here is your order page.")
+        return redirect('order_detail', order_id=order.id)
     
     return redirect('listing_detail', listing_id=listing.id)
+
+@login_required
+def order_detail(request, order_id):
+    # Retrieve the order only if the current user is either the buyer or seller
+    order = get_object_or_404(Order, id=order_id)
+    if request.user != order.buyer and request.user != order.seller:
+        messages.error(request, "You don't have permission to view this order.")
+        return redirect('home')
+    
+    return render(request, 'core/order_detail.html', {'order': order})
 
 @login_required
 def confirm_order(request, order_id):
@@ -90,4 +105,4 @@ def confirm_order(request, order_id):
         seller.save()
         
         messages.success(request, "Order confirmed! Funds have been released to the seller.")
-    return redirect('profile')
+    return redirect('order_detail', order_id=order.id)
