@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}GamesBazaar - The Premier Pakistani Gaming Marketplace{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        text-align: center;
+        padding: 4rem 0;
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero h1 {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        color: var(--text-main);
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        color: var(--text-muted);
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .game-card {
+        background-color: var(--surface-color);
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .game-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        border-color: var(--primary-color);
+    }
+
+    .game-card-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: var(--primary-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome to GamesBazaar</h1>
+    <p>Buy and sell game accounts, items, and currency securely in Pakistan.</p>
+    <a href="#" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.8rem 2rem;">Browse Store</a>
+</div>
+
+<div class="games-grid">
+    {% for game in games %}
+    <a href="{% url 'game_detail' game.id %}" style="text-decoration: none; color: inherit; display: block;">
+        <div class="game-card">
+            <div class="game-card-icon">{{ game.icon|default:"🎮" }}</div>
+            <h3>{{ game.name }}</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+                {% for cat in game.categories.all %}
+                    {{ cat.name }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No categories yet
+                {% endfor %}
+            </p>
+        </div>
+    </a>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 3rem;">
+        <p>No games added yet. Admins can add them in the dashboard.</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Listing - GamesBazaar{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-top: 4rem; max-width: 600px;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Sell an Item</h2>
+    
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            <div style="color: var(--accent-color); font-size: 0.85rem; margin-top: 0.25rem;">
+                {{ field.errors }}
+            </div>
+            {% if field.help_text %}
+            <div style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem;">
+                {{ field.help_text }}
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Listing</button>
+    </form>
+</div>
+
+<style>
+    /* target django forms rendering natively */
+    .form-group input, .form-group select, .form-group textarea {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background-color: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-main);
+        transition: border-color 0.2s;
+        font-family: var(--font-family);
+    }
+    
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(31, 163, 99, 0.15);
+    }
+
+    .form-group textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+</style>
+{% endblock %}

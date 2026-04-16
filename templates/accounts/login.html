@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Log In - GamesBazaar{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-top: 4rem;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            <div style="color: var(--accent-color); font-size: 0.85rem; margin-top: 0.25rem;">
+                {{ field.errors }}
+            </div>
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Log In</button>
+    </form>
+    <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+        Don't have an account? <a href="{% url 'signup' %}" style="color: var(--primary-color); text-decoration: none;">Sign Up</a>
+    </p>
+</div>
+
+<style>
+    /* target django forms rendering natively */
+    .form-group input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        background-color: #ffffff;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        color: var(--text-main);
+        transition: border-color 0.2s;
+    }
+    .form-group input:focus {
+        border-color: var(--primary-color);
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(31, 163, 99, 0.15);
+    }
+</style>
+{% endblock %}

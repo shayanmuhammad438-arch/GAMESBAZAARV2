@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}Top Up Wallet - GamesBazaar{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-top: 4rem; max-width: 500px;">
+    <h2 style="text-align: center; margin-bottom: 2rem;">Top Up Balance</h2>
+    
+    <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem;">
+        Enter the amount you wish to add to your wallet. An admin will review and approve your request shortly.
+    </p>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="amount">Amount (Rs.)</label>
+            <input type="number" name="amount" id="amount" class="form-control" min="10" step="0.01" required placeholder="e.g. 500">
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; font-size: 1.1rem; padding: 0.8rem;">Submit Request</button>
+    </form>
+</div>
+{% endblock %}
